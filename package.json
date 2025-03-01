@@ -9,11 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tanstack/react-query": "^5.66.11",
     "next": "15.2.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0"
   },
-  "devDependencies": { 
+  "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
