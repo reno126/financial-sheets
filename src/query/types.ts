@@ -1,4 +1,4 @@
-type TList<TResults> = {
+type TListRaw<TResults> = {
   count: number;
   next_url: string;
   request_id: string;
@@ -6,7 +6,7 @@ type TList<TResults> = {
   status: string;
 };
 
-export interface Ticker {
+export interface TickerRaw {
   active: boolean;
   cik: string;
   composite_figi: string;
@@ -21,5 +21,5 @@ export interface Ticker {
   type: string;
 }
 
-export type Tickers = Ticker[];
-export type TickersResults = TList<Tickers>;
+export type Tickers = TickerRaw[];
+export type TickersResultsRaw = TListRaw<Tickers>;

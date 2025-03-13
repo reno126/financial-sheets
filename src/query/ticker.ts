@@ -1,9 +1,9 @@
 import { usePredefinedListQuery } from '@/client/predefinedQuery';
-import { TickersResults } from './types';
+import { TickersResultsRaw } from './types';
 import { TQueryParams } from '@/client/types';
 
 export const useTickerList = (queryParams?: TQueryParams) => {
-  return usePredefinedListQuery<TickersResults>({
+  return usePredefinedListQuery<TickersResultsRaw>({
     path: 'tickers',
     queryParams,
     queryOptions: { retry: false },
