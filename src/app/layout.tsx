@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import './globals.css';
+import Providers from './providers';
 
 export default function RootLayout({
   children,
@@ -7,11 +8,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="bg-emerald-950">
-        <main className="mx-auto max-w-5xl bg-emerald-50 p-4">{children}</main>
-      </body>
-    </html>
+    <Providers>
+      <html lang="en">
+        <body className="bg-emerald-950">
+          <main className="mx-auto max-w-5xl bg-emerald-50 p-4">{children}</main>
+        </body>
+      </html>
+    </Providers>
   );
 }
 
