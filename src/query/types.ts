@@ -1,3 +1,5 @@
+import { Result } from '@/client/types';
+
 type TListRaw<TResults> = {
   count: number;
   next_url: string;
@@ -6,7 +8,7 @@ type TListRaw<TResults> = {
   status: string;
 };
 
-export interface TickerRaw {
+export interface TickerRaw extends Result {
   active: boolean;
   cik: string;
   composite_figi: string;
