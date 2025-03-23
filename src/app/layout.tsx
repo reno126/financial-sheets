@@ -1,6 +1,7 @@
 import { Metadata } from 'next';
 import './globals.css';
 import Providers from './providers';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 
 export default function RootLayout({
   children,
@@ -11,7 +12,9 @@ export default function RootLayout({
     <Providers>
       <html lang="en">
         <body className="bg-emerald-950">
-          <main className="mx-auto max-w-5xl bg-emerald-50 p-4">{children}</main>
+          <AppRouterCacheProvider>
+            <main className="mx-auto max-w-5xl bg-emerald-50 p-4">{children}</main>
+          </AppRouterCacheProvider>
         </body>
       </html>
     </Providers>
