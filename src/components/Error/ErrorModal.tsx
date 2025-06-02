@@ -3,7 +3,6 @@ import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 
 export interface ErrorModalProps {
@@ -16,9 +15,7 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({ error, onRetry }) => {
     <Dialog open>
       <DialogTitle>Error</DialogTitle>
       <DialogContent>
-        <DialogContentText>
-          <Alert severity="error">{error?.message}</Alert>
-        </DialogContentText>
+        <Alert severity="error">{error?.message}</Alert>
       </DialogContent>
       <DialogActions>
         <Button onClick={onRetry}>Retry last action</Button>
