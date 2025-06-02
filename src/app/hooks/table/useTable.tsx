@@ -62,6 +62,8 @@ const TableElement = <T extends RenderableRecord>({
     listQueryProps;
 
   if (isError) {
+    console.log(error?.message);
+
     return <ErrorModal error={error} onRetry={refetch} />;
   }
 
