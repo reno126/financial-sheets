@@ -1,12 +1,10 @@
-import { isArray, isEmpty } from 'lodash';
-
-export function createUri(
+export function createUrl(
   host: string,
-  path?: string | string[],
+  path: string | string[] = '',
   searchParams?: Record<string, string> | URLSearchParams
 ): string {
-  const searchParamsString = isEmpty(searchParams) ? '' : '?' + new URLSearchParams(searchParams);
-  const pathString = isArray(path) ? path.join('/') : (path ?? '');
+  const searchParamsString = new URLSearchParams(searchParams).toString().replace(/./, '?$&');
+  const pathString = Array.isArray(path) ? path.join('/') : path;
   const uri = host + pathString + searchParamsString;
   return uri;
 }
