@@ -8,10 +8,8 @@ export const get = async <TResult>(path: string, searchParams?: TQueryParams): P
     const uri = createUrl('api/polygon/', path, searchParams);
     const response = await fetch(uri);
     if (!response.ok) {
-      const m = await response.text();
-      console.log('fetch.m', m);
-      console.log('fetch.response.status', response.status);
-      throw new NetworkError(response.statusText, { context: 'fetch.get' }, response.status);
+      const message = await response.text();
+      throw new NetworkError(message, { context: 'fetch.get' }, response.status);
     }
 
     return await response.json();
