@@ -1,7 +1,7 @@
 // export const dynamic = 'force-static';
 
 import { FETCH_CONFIG } from '@/client/constants';
-import { createUri } from '@/helpers/createUri';
+import { createUrl } from '@/helpers/createUri';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
@@ -9,7 +9,7 @@ export async function GET(
   { params }: { params: Promise<{ slug: string[] }> }
 ) {
   const { slug: slug } = await params;
-  const uri = createUri(process.env.API_HOST as string, slug, request.nextUrl.searchParams);
+  const uri = createUrl(process.env.API_HOST as string, slug, request.nextUrl.searchParams);
 
   try {
     const response = await fetch(uri, {
