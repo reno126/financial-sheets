@@ -1,11 +1,12 @@
 export type TQueryParams = Record<string, string>;
 
 type RenderableType = string | number | boolean | null | undefined;
-export interface Result extends Record<string, RenderableType> {
-  __uid: string;
-}
-export interface ListResult {
-  results: Result[];
+
+export type RenderableRecord = Record<string, RenderableType>;
+
+export interface ResultListRaw<T> {
+  results: T[];
+  next_url?: string;
 }
 
-export type ResultKeys = Array<keyof Result>;
+export type WithUid<T> = T & { __uid: string };

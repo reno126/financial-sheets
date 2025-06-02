@@ -1,14 +1,6 @@
-import { Result } from '@/client/types';
+import { RenderableRecord } from '@/client/types';
 
-type TListRaw<TResults> = {
-  count: number;
-  next_url: string;
-  request_id: string;
-  results: TResults;
-  status: string;
-};
-
-export interface TickerRaw extends Result {
+export interface TickerRaw extends RenderableRecord {
   active: boolean;
   cik: string;
   composite_figi: string;
@@ -22,6 +14,3 @@ export interface TickerRaw extends Result {
   ticker: string;
   type: string;
 }
-
-export type Tickers = TickerRaw[];
-export type TickersResultsRaw = TListRaw<Tickers>;
