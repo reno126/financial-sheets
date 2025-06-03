@@ -7,7 +7,7 @@ export const useTickerList = (queryParams?: TQueryParams) => {
   return usePredefinedInfiniteQuery<ResultListRaw<TickerRaw>, InfiniteData<WithUid<TickerRaw>[]>>({
     path: 'tickers',
     queryKey: ['tickers', queryParams],
-    queryParams,
+    queryParams: { limit: '20', ...queryParams },
     options: {
       select: (data) => {
         return {

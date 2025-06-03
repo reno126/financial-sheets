@@ -5,7 +5,7 @@ import { Column } from '@/app/hooks/table/types';
 import { useTable } from '@/app/hooks/table/useTable';
 import { useTickerList } from '@/query/ticker';
 import { TickerRaw } from '@/query/types';
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { FC } from 'react';
 
 const tickerColumns: Column<TickerRaw>[] = [
@@ -35,15 +35,11 @@ export const TickersTable: FC = () => {
 
   return (
     <>
-      <div className="mb-4 flex justify-between">
+      <Box className="mb-4 flex justify-between">
         <Typography variant="h3" component="h1">
           Tickers list
         </Typography>
-
-        <Typography variant="h5" component="p">
-          Status {tableElementProps.listQueryProps.hasNextPage ? 'hasNextPage' : 'Thats all!!!'}
-        </Typography>
-      </div>
+      </Box>
 
       <SearchElement {...searchForwardedProps} />
       <TableElement {...tableElementProps} {...{ filters }} />

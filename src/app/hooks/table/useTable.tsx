@@ -8,15 +8,14 @@ import {
   TableCell,
   TableBody as MuiTableBody,
   Skeleton,
-  Button,
   Box,
 } from '@mui/material';
 import { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
-import { FC, Fragment } from 'react';
+import { FC, Fragment, UIEventHandler } from 'react';
 import { Column } from './types';
 import { genericMemo } from '@/helpers/react';
 import { StateType, useStateSearchParams } from '../state/useStateSearchParams';
-import { SentimentVeryDissatisfied } from '@mui/icons-material';
+import { SentimentNeutral, SentimentVeryDissatisfied } from '@mui/icons-material';
 import ErrorModal from '@/components/Error/ErrorModal';
 
 interface UseTableReturnProps<T extends RenderableRecord> {
@@ -58,8 +57,28 @@ const TableElement = <T extends RenderableRecord>({
   listQueryProps,
   columns,
 }: TableElementProps<T>) => {
-  const { data, isSuccess, isLoading, isError, error, hasNextPage, fetchNextPage, refetch } =
-    listQueryProps;
+  const {
+    data,
+    isSuccess,
+    isLoading,
+    isFetchingNextPage,
+    isError,
+    error,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+  } = listQueryProps;
+
+  const handleScroll: UIEventHandler<HTMLElement> = (e) => {
+    const target = e.target as HTMLElement;
+    const bottom = target.scrollHeight - target.scrollTop === target.clientHeight;
+
+    if (bottom && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  const noResults = data?.pages[0].length;
 
   if (isError) {
     return <ErrorModal error={error} onRetry={refetch} />;
@@ -67,15 +86,16 @@ const TableElement = <T extends RenderableRecord>({
 
   return (
     <>
-      <MuiTableContainer component={Paper}>
+      <MuiTableContainer component={Paper} onScroll={handleScroll} className="max-h-80 pb-14">
         <Table>
           <MemoizedTableHead {...{ columns }} />
           {isLoading && <MemoizedLoadingRows {...{ columns }} />}
           {isSuccess && <MemoizedTableBody {...{ data, columns }} />}
-          {data?.pages[0].length === 0 && <NoResults />}
+          {isFetchingNextPage && <MemoizedLoadingRows {...{ columns }} />}
+          {!hasNextPage && isSuccess && <NoResults type="noMoreResults" />}
+          {noResults === 0 && <NoResults type="noResults" />}
         </Table>
       </MuiTableContainer>
-      {hasNextPage ? <Button onClick={() => fetchNextPage()}>next</Button> : <p>That&apos;s all</p>}
     </>
   );
 };
@@ -143,13 +163,27 @@ const LoadingRows = <T extends RenderableRecord>({
 
 const MemoizedLoadingRows = genericMemo(LoadingRows);
 
-const NoResults = () => {
+const NoResults = ({ type }: { type: 'noResults' | 'noMoreResults' }) => {
+  const ResultContet = () => (
+    <>
+      {type === 'noResults' && (
+        <>
+          <SentimentVeryDissatisfied /> Sorry, no results.
+        </>
+      )}
+      {type === 'noMoreResults' && (
+        <>
+          <SentimentNeutral /> That&apos;s all results.
+        </>
+      )}
+    </>
+  );
   return (
     <MuiTableBody>
       <TableRow>
         <TableCell>
-          <Box className="text-red-500" component="span">
-            <SentimentVeryDissatisfied /> Sorry, we couldn&apos;t find what you are looking for.
+          <Box className={type === 'noResults' ? 'text-red-500' : 'text-blue-500'} component="span">
+            <ResultContet />
           </Box>
         </TableCell>
       </TableRow>
