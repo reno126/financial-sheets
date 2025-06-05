@@ -8,7 +8,7 @@ import { Stack } from '@mui/material';
 import { FC } from 'react';
 import DropdownPoper from '../DropdownPoper/DropdownPoper';
 import { Settings } from '@mui/icons-material';
-import { searchColumnName, tickerColumns } from './tickerTableConfig';
+import { orderConfig, searchColumnName, tickerColumns } from './tickerTableConfig';
 
 export const TickersTable: FC = () => {
   const {
@@ -22,6 +22,7 @@ export const TickersTable: FC = () => {
   const { TableElement, tableElementProps, updateFilters, filters } = useTable({
     listQuery: useTickerList,
     columns: enabledColumns,
+    orderConfig: orderConfig,
   });
 
   const { SearchElement, forwardedProps: searchForwardedProps } = useSearchFilter({

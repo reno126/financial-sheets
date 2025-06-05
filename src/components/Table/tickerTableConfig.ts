@@ -18,3 +18,5 @@ export const tickerColumns: Column<TickerRaw>[] = [
 ];
 
 export const searchColumnName = 'search';
+
+export const orderConfig = { orderKey: 'sort', directionKey: 'order' };

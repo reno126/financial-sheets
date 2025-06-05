@@ -6,3 +6,10 @@ export interface Column<T> {
   cellRenderer?: (result: T) => ReactNode;
   enabled?: boolean;
 }
+
+export type OrderDirection = 'asc' | 'desc';
+
+export interface OrderConfig {
+  orderKey: string;
+  directionKey: string;
+}
