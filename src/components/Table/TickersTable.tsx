@@ -9,6 +9,7 @@ import { FC } from 'react';
 import DropdownPoper from '../DropdownPoper/DropdownPoper';
 import { Settings } from '@mui/icons-material';
 import { orderConfig, searchColumnName, tickerColumns } from './tickerTableConfig';
+import { useSorters } from '@/app/hooks/table/useSorters';
 
 export const TickersTable: FC = () => {
   const {
@@ -22,7 +23,6 @@ export const TickersTable: FC = () => {
   const { TableElement, tableElementProps, updateFilters, filters } = useTable({
     listQuery: useTickerList,
     columns: enabledColumns,
-    orderConfig: orderConfig,
   });
 
   const { SearchElement, forwardedProps: searchForwardedProps } = useSearchFilter({
@@ -30,6 +30,8 @@ export const TickersTable: FC = () => {
     setValue: updateFilters,
     filters,
   });
+
+  const { SorterElement } = useSorters({ orderConfig });
 
   return (
     <>
@@ -40,7 +42,7 @@ export const TickersTable: FC = () => {
         </DropdownPoper>
       </Stack>
 
-      <TableElement {...tableElementProps} {...{ filters }} />
+      <TableElement {...tableElementProps} {...{ filters }} Sorter={SorterElement} />
     </>
   );
 };

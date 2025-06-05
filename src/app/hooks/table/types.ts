@@ -7,6 +7,11 @@ export interface Column<T> {
   enabled?: boolean;
 }
 
+export interface SorterProps {
+  id: string;
+  header: string;
+}
+
 export type OrderDirection = 'asc' | 'desc';
 
 export interface OrderConfig {

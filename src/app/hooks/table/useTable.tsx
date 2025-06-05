@@ -9,11 +9,10 @@ import {
   TableBody as MuiTableBody,
   Skeleton,
   Box,
-  TableSortLabel,
 } from '@mui/material';
 import { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 import { FC, Fragment, UIEventHandler } from 'react';
-import { Column, OrderConfig, OrderDirection } from './types';
+import { Column, SorterProps } from './types';
 import { genericMemo } from '@/helpers/react';
 import { StateType, useStateSearchParams } from '../state/useStateSearchParams';
 import { SentimentNeutral, SentimentVeryDissatisfied } from '@mui/icons-material';
@@ -21,7 +20,7 @@ import ErrorModal from '@/components/Error/ErrorModal';
 
 interface UseTableReturnProps<T extends RenderableRecord> {
   TableElement: FC<TableElementProps<T>>;
-  tableElementProps: TableElementProps<T>;
+  tableElementProps: Omit<TableElementProps<T>, 'Sorter'>;
   updateFilters: (state: StateType) => void;
   filters: StateType;
 }
@@ -29,13 +28,11 @@ interface UseTableReturnProps<T extends RenderableRecord> {
 interface UseTableProps<T extends RenderableRecord> {
   listQuery: (queryParams?: TQueryParams) => UseInfiniteQueryResult<InfiniteData<WithUid<T>[]>>;
   columns: Column<T>[];
-  orderConfig: OrderConfig;
 }
 
 export function useTable<T extends RenderableRecord>({
   listQuery,
   columns,
-  orderConfig,
 }: UseTableProps<T>): UseTableReturnProps<T> {
   const [filters, updateFilters] = useStateSearchParams();
 
@@ -46,9 +43,6 @@ export function useTable<T extends RenderableRecord>({
     tableElementProps: {
       listQueryProps,
       columns,
-      updateFilters,
-      filters,
-      orderConfig,
     },
     updateFilters,
     filters,
@@ -58,17 +52,14 @@ export function useTable<T extends RenderableRecord>({
 interface TableElementProps<T extends RenderableRecord> {
   listQueryProps: UseInfiniteQueryResult<InfiniteData<WithUid<T>[]>>;
   columns: Column<T>[];
-  updateFilters: (state: StateType) => void;
-  filters: StateType;
-  orderConfig: OrderConfig;
+
+  Sorter: FC<SorterProps>;
 }
 
 const TableElement = <T extends RenderableRecord>({
   listQueryProps,
   columns,
-  updateFilters,
-  filters,
-  orderConfig,
+  Sorter,
 }: TableElementProps<T>) => {
   const {
     data,
@@ -101,7 +92,7 @@ const TableElement = <T extends RenderableRecord>({
     <>
       <MuiTableContainer component={Paper} onScroll={handleScroll} className="max-h-80 pb-14">
         <Table>
-          <MemoizedTableHead {...{ columns, filters, updateFilters, orderConfig }} />
+          <MemoizedTableHead {...{ columns, Sorter }} />
           {isLoading && <MemoizedLoadingRows {...{ columns }} />}
           {isSuccess && <MemoizedTableBody {...{ data, columns }} />}
           {isFetchingNextPage && <MemoizedLoadingRows {...{ columns }} />}
@@ -116,38 +107,19 @@ const TableElement = <T extends RenderableRecord>({
 interface TablePartialProps<T extends RenderableRecord> {
   data: InfiniteData<WithUid<T>[]>;
   columns: Column<T>[];
-  updateFilters: (state: StateType) => void;
-  filters: StateType;
-  orderConfig: OrderConfig;
+  Sorter: FC<SorterProps>;
 }
 
 const TableHead = <T extends RenderableRecord>({
   columns,
-  updateFilters,
-  filters,
-  orderConfig,
-}: Pick<TablePartialProps<T>, 'columns' | 'updateFilters' | 'filters' | 'orderConfig'>) => {
-  const { orderKey, directionKey } = orderConfig;
-  const sortBy = filters?.[orderKey];
-  const orderDirection = filters?.[directionKey] as OrderDirection;
-
-  const sortHandler = (id: string) => {
-    const getOrderDirection = filters?.sort === id ? revertDirection(filters?.order) : 'asc';
-    updateFilters({ [directionKey]: getOrderDirection, [orderKey]: id });
-  };
-
+  Sorter,
+}: Pick<TablePartialProps<T>, 'columns' | 'Sorter'>) => {
   return (
     <MuiTableHead>
       <TableRow>
         {columns.map(({ id, header }) => (
           <TableCell key={id}>
-            <TableSortLabel
-              active={sortBy === id}
-              direction={orderDirection}
-              onClick={() => sortHandler(id)}
-            >
-              {header}
-            </TableSortLabel>
+            <Sorter {...{ id, header }} />
           </TableCell>
         ))}
       </TableRow>
@@ -229,6 +201,3 @@ const NoResults = ({ type }: { type: 'noResults' | 'noMoreResults' }) => {
     </MuiTableBody>
   );
 };
-
-const revertDirection = (direction: string): OrderDirection =>
-  direction === 'asc' ? 'desc' : 'asc';

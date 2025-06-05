@@ -68,7 +68,7 @@ export function useSearchFilter({
   };
 }
 
-export const SearchElement = ({
+const SearchElement = ({
   value,
   handleOnChange,
   handleOnClearClick,
