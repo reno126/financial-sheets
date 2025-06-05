@@ -8,7 +8,6 @@ import React, {
   useState,
 } from 'react';
 import { useDebounce } from 'use-debounce';
-// import { Filter } from '../table/types';
 import { StateType } from '../state/useStateSearchParams';
 
 type SearchElementProps = {

@@ -111,8 +111,8 @@ const TableHead = <T extends RenderableRecord>({
   return (
     <MuiTableHead>
       <TableRow>
-        {columns.map(({ resultKey, header }) => (
-          <TableCell key={resultKey}>{header}</TableCell>
+        {columns.map(({ id, header }) => (
+          <TableCell key={id}>{header}</TableCell>
         ))}
       </TableRow>
     </MuiTableHead>
@@ -130,9 +130,9 @@ const TableBody = <T extends RenderableRecord>({ data, columns }: TablePartialPr
             {page.map((item) => {
               return (
                 <TableRow key={item.__uid}>
-                  {columns.map(({ resultKey, cellRenderer }) => {
-                    const customCell = !!cellRenderer ? cellRenderer(item) : item[resultKey];
-                    return <TableCell key={resultKey}>{customCell}</TableCell>;
+                  {columns.map(({ id, cellRenderer }) => {
+                    const customCell = !!cellRenderer ? cellRenderer(item) : item[id];
+                    return <TableCell key={id}>{customCell}</TableCell>;
                   })}
                 </TableRow>
               );
@@ -152,7 +152,7 @@ const LoadingRows = <T extends RenderableRecord>({
     <MuiTableBody>
       <TableRow>
         {columns.map((ca) => (
-          <TableCell key={ca.resultKey}>
+          <TableCell key={ca.id}>
             <Skeleton variant="rectangular" height={20} animation="wave" />
           </TableCell>
         ))}

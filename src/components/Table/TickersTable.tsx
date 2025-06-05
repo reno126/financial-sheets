@@ -1,29 +1,27 @@
 'use client';
 
 import { useSearchFilter } from '@/app/hooks/filters/useSearchFilter';
-import { Column } from '@/app/hooks/table/types';
+import { useColumnsFilter } from '@/app/hooks/table/useColumnsFilter';
 import { useTable } from '@/app/hooks/table/useTable';
 import { useTickerList } from '@/query/ticker';
-import { TickerRaw } from '@/query/types';
+import { Stack } from '@mui/material';
 import { FC } from 'react';
-
-const tickerColumns: Column<TickerRaw>[] = [
-  { resultKey: 'name', header: 'Name' },
-  { resultKey: 'ticker', header: 'Ticker' },
-  { resultKey: 'market', header: 'Market' },
-  {
-    resultKey: 'last_updated_utc',
-    header: 'Last updayed',
-    cellRenderer: (result) => new Date(result.last_updated_utc).toLocaleTimeString(),
-  },
-];
-
-const searchColumnName = 'search';
+import DropdownPoper from '../DropdownPoper/DropdownPoper';
+import { Settings } from '@mui/icons-material';
+import { searchColumnName, tickerColumns } from './tickerTableConfig';
 
 export const TickersTable: FC = () => {
+  const {
+    ColumnsFilterElement,
+    forwardedProps: tickerColumnsProps,
+    enabledColumns,
+  } = useColumnsFilter({
+    columns: tickerColumns,
+  });
+
   const { TableElement, tableElementProps, updateFilters, filters } = useTable({
     listQuery: useTickerList,
-    columns: tickerColumns,
+    columns: enabledColumns,
   });
 
   const { SearchElement, forwardedProps: searchForwardedProps } = useSearchFilter({
@@ -34,7 +32,13 @@ export const TickersTable: FC = () => {
 
   return (
     <>
-      <SearchElement {...searchForwardedProps} />
+      <Stack direction="row" spacing={2}>
+        <SearchElement {...searchForwardedProps} />
+        <DropdownPoper caption="columns" buttonProps={{ startIcon: <Settings /> }}>
+          <ColumnsFilterElement {...tickerColumnsProps} />
+        </DropdownPoper>
+      </Stack>
+
       <TableElement {...tableElementProps} {...{ filters }} />
     </>
   );
