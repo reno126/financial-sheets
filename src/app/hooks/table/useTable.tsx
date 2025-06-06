@@ -8,20 +8,19 @@ import {
   TableCell,
   TableBody as MuiTableBody,
   Skeleton,
-  Button,
   Box,
 } from '@mui/material';
 import { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
-import { FC, Fragment } from 'react';
-import { Column } from './types';
+import { createContext, FC, Fragment, UIEventHandler, useContext } from 'react';
+import { Column, OrderConfig, SorterProps } from './types';
 import { genericMemo } from '@/helpers/react';
 import { StateType, useStateSearchParams } from '../state/useStateSearchParams';
-import { SentimentVeryDissatisfied } from '@mui/icons-material';
+import { SentimentNeutral, SentimentVeryDissatisfied } from '@mui/icons-material';
 import ErrorModal from '@/components/Error/ErrorModal';
 
 interface UseTableReturnProps<T extends RenderableRecord> {
   TableElement: FC<TableElementProps<T>>;
-  tableElementProps: TableElementProps<T>;
+  tableElementProps: Omit<TableElementProps<T>, 'Sorter'>;
   updateFilters: (state: StateType) => void;
   filters: StateType;
 }
@@ -29,13 +28,16 @@ interface UseTableReturnProps<T extends RenderableRecord> {
 interface UseTableProps<T extends RenderableRecord> {
   listQuery: (queryParams?: TQueryParams) => UseInfiniteQueryResult<InfiniteData<WithUid<T>[]>>;
   columns: Column<T>[];
+  orderConfig: OrderConfig;
 }
 
 export function useTable<T extends RenderableRecord>({
   listQuery,
   columns,
+  orderConfig,
 }: UseTableProps<T>): UseTableReturnProps<T> {
   const [filters, updateFilters] = useStateSearchParams();
+
   const listQueryProps = listQuery(filters);
 
   return {
@@ -43,56 +45,88 @@ export function useTable<T extends RenderableRecord>({
     tableElementProps: {
       listQueryProps,
       columns,
+      orderConfig,
     },
     updateFilters,
     filters,
   };
 }
 
-interface TableElementProps<T extends RenderableRecord> {
+interface TableElementProps<T> {
   listQueryProps: UseInfiniteQueryResult<InfiniteData<WithUid<T>[]>>;
   columns: Column<T>[];
+  Sorter: FC<SorterProps>;
+  orderConfig: OrderConfig;
 }
+
+const TableContext = createContext({} as TableElementProps<unknown>);
 
 const TableElement = <T extends RenderableRecord>({
   listQueryProps,
   columns,
+  Sorter,
+  orderConfig,
 }: TableElementProps<T>) => {
-  const { data, isSuccess, isLoading, isError, error, hasNextPage, fetchNextPage, refetch } =
-    listQueryProps;
+  const {
+    data,
+    isSuccess,
+    isLoading,
+    isFetchingNextPage,
+    isError,
+    error,
+    hasNextPage,
+    fetchNextPage,
+    refetch,
+  } = listQueryProps;
+
+  const handleScroll: UIEventHandler<HTMLElement> = (e) => {
+    const target = e.target as HTMLElement;
+    const bottom = target.scrollHeight - target.scrollTop === target.clientHeight;
+
+    if (bottom && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  };
+
+  const noResults = data?.pages[0].length;
 
   if (isError) {
     return <ErrorModal error={error} onRetry={refetch} />;
   }
 
+  const contextValue = {
+    data,
+    columns: columns as Column<unknown>[],
+    Sorter,
+    orderConfig,
+    listQueryProps,
+  };
+
   return (
-    <>
-      <MuiTableContainer component={Paper}>
+    <TableContext.Provider value={contextValue}>
+      <MuiTableContainer component={Paper} onScroll={handleScroll} className="max-h-80 pb-14">
         <Table>
-          <MemoizedTableHead {...{ columns }} />
-          {isLoading && <MemoizedLoadingRows {...{ columns }} />}
-          {isSuccess && <MemoizedTableBody {...{ data, columns }} />}
-          {data?.pages[0].length === 0 && <NoResults />}
+          <MemoizedTableHead />
+          {isLoading && <MemoizedLoadingRows />}
+          {isSuccess && <MemoizedTableBody />}
+          {isFetchingNextPage && <MemoizedLoadingRows />}
+          {!hasNextPage && isSuccess && <NoResults type="noMoreResults" />}
+          {noResults === 0 && <NoResults type="noResults" />}
         </Table>
       </MuiTableContainer>
-      {hasNextPage ? <Button onClick={() => fetchNextPage()}>next</Button> : <p>That&apos;s all</p>}
-    </>
+    </TableContext.Provider>
   );
 };
 
-interface TablePartialProps<T extends RenderableRecord> {
-  data: InfiniteData<WithUid<T>[]>;
-  columns: Column<T>[];
-}
-
-const TableHead = <T extends RenderableRecord>({
-  columns,
-}: Pick<TablePartialProps<T>, 'columns'>) => {
+const TableHead = () => {
+  const { columns, Sorter, orderConfig } = useContext(TableContext);
   return (
     <MuiTableHead>
       <TableRow>
-        {columns.map(({ resultKey, header }) => (
-          <TableCell key={resultKey}>{header}</TableCell>
+        {columns.map(({ id, header }) => (
+          <TableCell key={id}>
+            <Sorter {...{ id, header, orderConfig }} />
+          </TableCell>
         ))}
       </TableRow>
     </MuiTableHead>
@@ -101,18 +135,23 @@ const TableHead = <T extends RenderableRecord>({
 
 const MemoizedTableHead = genericMemo(TableHead);
 
-const TableBody = <T extends RenderableRecord>({ data, columns }: TablePartialProps<T>) => {
+const TableBody = () => {
+  const {
+    columns,
+    listQueryProps: { data },
+  } = useContext(TableContext);
+
   return (
     <MuiTableBody>
-      {data.pages.map((page, i) => {
+      {data?.pages.map((page, i) => {
         return (
           <Fragment key={i}>
             {page.map((item) => {
               return (
                 <TableRow key={item.__uid}>
-                  {columns.map(({ resultKey, cellRenderer }) => {
-                    const customCell = !!cellRenderer ? cellRenderer(item) : item[resultKey];
-                    return <TableCell key={resultKey}>{customCell}</TableCell>;
+                  {columns.map(({ id, cellRenderer }) => {
+                    const customCell = !!cellRenderer ? cellRenderer(item) : item[id];
+                    return <TableCell key={id}>{customCell}</TableCell>;
                   })}
                 </TableRow>
               );
@@ -125,14 +164,13 @@ const TableBody = <T extends RenderableRecord>({ data, columns }: TablePartialPr
 };
 const MemoizedTableBody = genericMemo(TableBody);
 
-const LoadingRows = <T extends RenderableRecord>({
-  columns,
-}: Pick<TablePartialProps<T>, 'columns'>) => {
+const LoadingRows = () => {
+  const { columns } = useContext(TableContext);
   return (
     <MuiTableBody>
       <TableRow>
         {columns.map((ca) => (
-          <TableCell key={ca.resultKey}>
+          <TableCell key={ca.id}>
             <Skeleton variant="rectangular" height={20} animation="wave" />
           </TableCell>
         ))}
@@ -143,13 +181,27 @@ const LoadingRows = <T extends RenderableRecord>({
 
 const MemoizedLoadingRows = genericMemo(LoadingRows);
 
-const NoResults = () => {
+const NoResults = ({ type }: { type: 'noResults' | 'noMoreResults' }) => {
+  const ResultContet = () => (
+    <>
+      {type === 'noResults' && (
+        <>
+          <SentimentVeryDissatisfied /> Sorry, no results.
+        </>
+      )}
+      {type === 'noMoreResults' && (
+        <>
+          <SentimentNeutral /> That&apos;s all results.
+        </>
+      )}
+    </>
+  );
   return (
     <MuiTableBody>
       <TableRow>
         <TableCell>
-          <Box className="text-red-500" component="span">
-            <SentimentVeryDissatisfied /> Sorry, we couldn&apos;t find what you are looking for.
+          <Box className={type === 'noResults' ? 'text-red-500' : 'text-blue-500'} component="span">
+            <ResultContet />
           </Box>
         </TableCell>
       </TableRow>

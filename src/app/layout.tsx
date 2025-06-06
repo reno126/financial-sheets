@@ -12,8 +12,8 @@ export default function RootLayout({
     <Providers>
       <AppRouterCacheProvider>
         <html lang="en">
-          <body className="bg-emerald-950">
-            <main className="mx-auto max-w-5xl bg-emerald-50 p-4">{children}</main>
+          <body className="h-screen bg-gradient-to-t from-sky-100 to-pink-100">
+            <main className="mx-auto max-w-5xl bg-sky-100 p-4">{children}</main>
           </body>
         </html>
       </AppRouterCacheProvider>

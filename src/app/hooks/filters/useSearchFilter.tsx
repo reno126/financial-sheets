@@ -8,7 +8,6 @@ import React, {
   useState,
 } from 'react';
 import { useDebounce } from 'use-debounce';
-// import { Filter } from '../table/types';
 import { StateType } from '../state/useStateSearchParams';
 
 type SearchElementProps = {
@@ -69,7 +68,7 @@ export function useSearchFilter({
   };
 }
 
-export const SearchElement = ({
+const SearchElement = ({
   value,
   handleOnChange,
   handleOnClearClick,
