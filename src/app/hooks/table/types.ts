@@ -10,6 +10,7 @@ export interface Column<T> {
 export interface SorterProps {
   id: string;
   header: string;
+  orderConfig: OrderConfig;
 }
 
 export type OrderDirection = 'asc' | 'desc';
