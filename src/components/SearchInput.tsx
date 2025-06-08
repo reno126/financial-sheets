@@ -30,5 +30,3 @@ export const SearchInput: React.FC<SearchInputProps> = ({ onClearClick, ...props
     />
   );
 };
-
-export default SearchInput;

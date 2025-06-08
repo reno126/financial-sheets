@@ -17,6 +17,19 @@ export const tickerColumns: Column<TickerRaw>[] = [
   { id: 'type', header: 'Type', enabled: false },
 ];
 
-export const searchColumnName = 'search';
+export const tickerTableCfg = {
+  search: { columnName: 'search' },
+  orderConfig: { orderKey: 'sort', directionKey: 'order' },
+  customFilters: {
+    type: {
+      columnName: 'type',
+      options: ['ETF', 'FUND', 'CS', 'OS', 'RIGHT', 'WARRANT', 'UNIT', 'ADRC'],
+    },
+    market: {
+      columnName: 'market',
+      options: ['stocks', 'otc', 'crypto'],
+    },
+  },
+};
 
-export const orderConfig = { orderKey: 'sort', directionKey: 'order' };
+export type TickerTableCfgType = typeof tickerTableCfg;

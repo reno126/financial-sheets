@@ -1,4 +1,4 @@
-import TickersTable from '@/components/Table/TickersTable';
+import { TickersTable } from '@/components/Table/TickersTable';
 import { Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import { Suspense } from 'react';

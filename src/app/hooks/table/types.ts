@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { StateType } from '../state/useStateSearchParams';
 
 export interface Column<T> {
   id: string & keyof T;
@@ -19,3 +20,5 @@ export interface OrderConfig {
   orderKey: string;
   directionKey: string;
 }
+
+export type Filters = StateType;

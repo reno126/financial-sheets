@@ -28,7 +28,11 @@ export const DropdownPoper = ({ caption, children, buttonProps }: DropdownPoperP
         onClose={handleClose}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'left',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
         }}
       >
         {children}
@@ -36,5 +40,3 @@ export const DropdownPoper = ({ caption, children, buttonProps }: DropdownPoperP
     </>
   );
 };
-
-export default DropdownPoper;
