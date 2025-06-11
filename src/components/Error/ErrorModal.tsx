@@ -23,5 +23,3 @@ export const ErrorModal: React.FC<ErrorModalProps> = ({ error, onRetry }) => {
     </Dialog>
   );
 };
-
-export default ErrorModal;

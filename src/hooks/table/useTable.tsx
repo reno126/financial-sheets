@@ -12,17 +12,17 @@ import {
 } from '@mui/material';
 import { InfiniteData, UseInfiniteQueryResult } from '@tanstack/react-query';
 import { createContext, FC, Fragment, UIEventHandler, useContext } from 'react';
-import { Column, OrderConfig, SorterProps } from './types';
+import { Column, Filters, OrderConfig, SorterProps } from './types';
 import { genericMemo } from '@/helpers/react';
-import { StateType, useStateSearchParams } from '../state/useStateSearchParams';
+import { useStateSearchParams } from '../state/useStateSearchParams';
 import { SentimentNeutral, SentimentVeryDissatisfied } from '@mui/icons-material';
-import ErrorModal from '@/components/Error/ErrorModal';
+import { ErrorModal } from '@/components/Error/ErrorModal';
 
 interface UseTableReturnProps<T extends RenderableRecord> {
   TableElement: FC<TableElementProps<T>>;
   tableElementProps: Omit<TableElementProps<T>, 'Sorter'>;
-  updateFilters: (state: StateType) => void;
-  filters: StateType;
+  updateFilters: (state: Filters) => void;
+  filters: Filters;
 }
 
 interface UseTableProps<T extends RenderableRecord> {
@@ -81,7 +81,7 @@ const TableElement = <T extends RenderableRecord>({
 
   const handleScroll: UIEventHandler<HTMLElement> = (e) => {
     const target = e.target as HTMLElement;
-    const bottom = target.scrollHeight - target.scrollTop === target.clientHeight;
+    const bottom = target.scrollHeight - target.scrollTop - 5 <= target.clientHeight;
 
     if (bottom && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -123,9 +123,9 @@ const TableHead = () => {
   return (
     <MuiTableHead>
       <TableRow>
-        {columns.map(({ id, header }) => (
+        {columns.map(({ id, header, unsortable }) => (
           <TableCell key={id}>
-            <Sorter {...{ id, header, orderConfig }} />
+            {unsortable ? header : <Sorter {...{ id, header, orderConfig }} />}
           </TableCell>
         ))}
       </TableRow>

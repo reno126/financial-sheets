@@ -1,4 +1,4 @@
-import SearchInput, { SearchInputProps } from '@/components/SearchInput';
+import { SearchInput, SearchInputProps } from '@/components/SearchInput';
 import React, {
   ChangeEvent,
   MouseEventHandler,
@@ -8,7 +8,7 @@ import React, {
   useState,
 } from 'react';
 import { useDebounce } from 'use-debounce';
-import { StateType } from '../state/useStateSearchParams';
+import { Filters } from '../table/types';
 
 type SearchElementProps = {
   value: string;
@@ -19,8 +19,8 @@ type SearchElementProps = {
 
 interface UseSearchFilterProps {
   columnName: string;
-  setValue: (filter: StateType) => void;
-  filters: StateType;
+  setValue: (filter: Filters) => void;
+  filters: Filters;
   debounce?: number;
 }
 
@@ -32,7 +32,6 @@ export function useSearchFilter({
 }: UseSearchFilterProps) {
   const inputInitValue = filters[columnName] ?? '';
   const [inputValue, setInputValue] = useState<string>(inputInitValue);
-  // const isFirstOpen = useRef(true);
   const [text] = useDebounce(inputValue, debounce);
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -83,4 +82,3 @@ const SearchElement = ({
     />
   );
 };
-
