@@ -1,6 +1,6 @@
 import { Paper, Stack, Typography, Chip } from '@mui/material';
-import { TickerTableCfgType } from '../Table/tickerTableConfig';
-import { Filters } from '@/app/hooks/table/types';
+import { Filters } from '@/hooks/table/types';
+import { TickerTableCfgType } from '@/app/tickers/tickerTableConfig';
 
 export interface FiltersChipsProps {
   customFilters: TickerTableCfgType['customFilters'];

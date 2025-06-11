@@ -1,5 +1,5 @@
-import { Column } from '@/app/hooks/table/types';
-import { TickerRaw } from '@/query/types';
+import { Column } from '@/hooks/table/types';
+import { TickerRaw } from '@/query/ticker/tickerType';
 
 export const tickerColumns: Column<TickerRaw>[] = [
   { id: 'name', header: 'Name', enabled: true },
@@ -8,7 +8,7 @@ export const tickerColumns: Column<TickerRaw>[] = [
   {
     id: 'last_updated_utc',
     header: 'Last updayed',
-    cellRenderer: (result) => new Date(result.last_updated_utc).toLocaleTimeString(),
+    cellRenderer: (result) => new Date(result.last_updated_utc).toLocaleDateString(),
     enabled: true,
   },
   { id: 'currency_name', header: 'Currency Name', enabled: false },

@@ -1,7 +1,7 @@
 import { usePredefinedInfiniteQuery } from '@/client/predefinedQuery';
-import { TickerRaw } from './types';
 import { ResultListRaw, TQueryParams, WithUid } from '@/client/types';
 import { InfiniteData } from '@tanstack/react-query';
+import { TickerRaw } from './tickerType';
 
 export const useTickerList = (queryParams?: TQueryParams) => {
   return usePredefinedInfiniteQuery<ResultListRaw<TickerRaw>, InfiniteData<WithUid<TickerRaw>[]>>({

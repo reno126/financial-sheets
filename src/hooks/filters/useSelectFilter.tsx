@@ -39,7 +39,7 @@ export function useSelectFilter({ columnName, setValue, filters, options }: UseS
 
 const SelectFilterElement = ({ selected, handleOnChange, options }: SelectFilterElementProps) => {
   return (
-    <Stack paddingY={1} paddingX={2}>
+    <Stack>
       {options.map((option) => (
         <FormControlLabel
           key={option}

@@ -1,4 +1,4 @@
-import { Button, ButtonProps, Popover } from '@mui/material';
+import { Box, Button, ButtonProps, Popover } from '@mui/material';
 import { PropsWithChildren, useState } from 'react';
 
 export interface DropdownPoperProps extends PropsWithChildren {
@@ -35,7 +35,9 @@ export const DropdownPoper = ({ caption, children, buttonProps }: DropdownPoperP
           horizontal: 'center',
         }}
       >
-        {children}
+        <Box paddingY={1} paddingX={2}>
+          {children}
+        </Box>
       </Popover>
     </>
   );

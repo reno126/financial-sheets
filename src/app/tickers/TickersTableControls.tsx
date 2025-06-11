@@ -1,19 +1,19 @@
 'use client';
 
-import { useSearchFilter } from '@/app/hooks/filters/useSearchFilter';
-import { useColumnsFilter } from '@/app/hooks/table/useColumnsFilter';
-import { useTable } from '@/app/hooks/table/useTable';
-import { useTickerList } from '@/query/ticker';
+import { useSearchFilter } from '@/hooks/filters/useSearchFilter';
+import { useColumnsFilter } from '@/hooks/table/useColumnsFilter';
+import { useTable } from '@/hooks/table/useTable';
+import { useTickerList } from '@/query/ticker/tickerQuery';
 import { Stack } from '@mui/material';
 import { FC } from 'react';
 import { FilterAlt, Settings } from '@mui/icons-material';
 import { tickerColumns, tickerTableCfg } from './tickerTableConfig';
-import { MemoizedSorter } from '../Sorter/Sorter';
-import { useSelectFilter } from '@/app/hooks/filters/useSelectFilter';
-import { FiltersChips } from '../FiltersChips/FiltersChips';
-import { DropdownPoper } from '../DropdownPoper/DropdownPoper';
+import { MemoizedSorter } from '@/components/Sorter/Sorter';
+import { useSelectFilter } from '@/hooks/filters/useSelectFilter';
+import { FiltersChips } from '@/components/FiltersChips/FiltersChips';
+import { DropdownPoper } from '@/components/DropdownPoper/DropdownPoper';
 
-export const TickersTable: FC = () => {
+export const TickersTableControls: FC = () => {
   const {
     ColumnsFilterElement,
     forwardedProps: tickerColumnsProps,

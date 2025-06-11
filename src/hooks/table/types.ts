@@ -6,12 +6,14 @@ export interface Column<T> {
   header: string;
   cellRenderer?: (result: T) => ReactNode;
   enabled?: boolean;
+  unsortable?: boolean;
 }
 
 export interface SorterProps {
   id: string;
   header: string;
   orderConfig: OrderConfig;
+  unsortable?: boolean;
 }
 
 export type OrderDirection = 'asc' | 'desc';

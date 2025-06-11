@@ -1,5 +1,5 @@
-import { useStateSearchParams } from '@/app/hooks/state/useStateSearchParams';
-import { SorterProps, OrderDirection } from '@/app/hooks/table/types';
+import { useStateSearchParams } from '@/hooks/state/useStateSearchParams';
+import { SorterProps, OrderDirection } from '@/hooks/table/types';
 import { TableSortLabel } from '@mui/material';
 import { memo } from 'react';
 

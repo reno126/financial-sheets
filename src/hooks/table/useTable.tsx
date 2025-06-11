@@ -81,7 +81,7 @@ const TableElement = <T extends RenderableRecord>({
 
   const handleScroll: UIEventHandler<HTMLElement> = (e) => {
     const target = e.target as HTMLElement;
-    const bottom = target.scrollHeight - target.scrollTop === target.clientHeight;
+    const bottom = target.scrollHeight - target.scrollTop - 5 <= target.clientHeight;
 
     if (bottom && hasNextPage && !isFetchingNextPage) {
       fetchNextPage();
@@ -123,9 +123,9 @@ const TableHead = () => {
   return (
     <MuiTableHead>
       <TableRow>
-        {columns.map(({ id, header }) => (
+        {columns.map(({ id, header, unsortable }) => (
           <TableCell key={id}>
-            <Sorter {...{ id, header, orderConfig }} />
+            {unsortable ? header : <Sorter {...{ id, header, orderConfig }} />}
           </TableCell>
         ))}
       </TableRow>
