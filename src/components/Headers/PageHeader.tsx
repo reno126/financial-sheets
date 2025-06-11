@@ -6,7 +6,7 @@ export interface PageHeaderProps {
 
 export const PageHeader: React.FC<PageHeaderProps> = ({ header }) => {
   return (
-    <Typography variant="h4" component="h1">
+    <Typography variant="h4" component="h1" sx={{ paddingTop: 2 }}>
       {header}
     </Typography>
   );
