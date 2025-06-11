@@ -104,8 +104,8 @@ const TableElement = <T extends RenderableRecord>({
 
   return (
     <TableContext.Provider value={contextValue}>
-      <MuiTableContainer component={Paper} onScroll={handleScroll} className="max-h-80 pb-14">
-        <Table>
+      <MuiTableContainer component={Paper} onScroll={handleScroll} className="max-h-96 pb-14">
+        <Table stickyHeader>
           <MemoizedTableHead />
           {isLoading && <MemoizedLoadingRows />}
           {isSuccess && <MemoizedTableBody />}
@@ -124,7 +124,7 @@ const TableHead = () => {
     <MuiTableHead>
       <TableRow>
         {columns.map(({ id, header, unsortable }) => (
-          <TableCell key={id}>
+          <TableCell key={id} sx={{ background: 'grey' }}>
             {unsortable ? header : <Sorter {...{ id, header, orderConfig }} />}
           </TableCell>
         ))}

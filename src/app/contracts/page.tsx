@@ -1,14 +1,12 @@
 import { Stack } from '@mui/material';
-import Typography from '@mui/material/Typography';
 import { Suspense } from 'react';
 import { ContractsTableControls } from './ContractsTableControls';
+import { PageHeader } from '@/components/Headers/PageHeader';
 
-export default function Page() {
+export default function ContractsPage() {
   return (
-    <Stack spacing={2}>
-      <Typography variant="h3" component="h3">
-        Contracts list
-      </Typography>
+    <Stack spacing={3}>
+      <PageHeader header="Contracts list" />
       <Suspense>
         <ContractsTableControls />
       </Suspense>

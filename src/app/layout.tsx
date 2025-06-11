@@ -14,8 +14,8 @@ export default function RootLayout({
     <Providers>
       <AppRouterCacheProvider>
         <html lang="en">
-          <body className="h-screen bg-gradient-to-t from-sky-100 to-pink-100">
-            <main className="mx-auto max-w-5xl bg-sky-100 p-4">
+          <body className="h-screen bg-gradient-to-t from-gray-100 to-neutral-400">
+            <main className="mx-auto h-full w-2/3 bg-slate-200 p-4">
               <nav>
                 <NavBar navConfig={navigationConfig} />
               </nav>
@@ -32,4 +32,3 @@ export const metadata: Metadata = {
   title: 'Financial sheets',
   description: 'Testing some new front-end features based on simply UI app',
 };
-

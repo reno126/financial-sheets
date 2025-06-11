@@ -8,7 +8,7 @@ export default function Page() {
         This is Home Page.
       </Typography>
       <Typography variant="h6" component="p">
-        Please select nav menu.
+        Please use nav menu.
       </Typography>
     </Stack>
   );

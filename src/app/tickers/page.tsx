@@ -1,14 +1,12 @@
 import { Stack } from '@mui/material';
-import Typography from '@mui/material/Typography';
 import { Suspense } from 'react';
 import { TickersTableControls } from './TickersTableControls';
+import { PageHeader } from '@/components/Headers/PageHeader';
 
-export default function Page() {
+export default function TickersPage() {
   return (
     <Stack spacing={3}>
-      <Typography variant="h4" component="h1">
-        Tickers list
-      </Typography>
+      <PageHeader header="Tickers list" />
       <Suspense>
         <TickersTableControls />
       </Suspense>
