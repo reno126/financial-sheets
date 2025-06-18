@@ -6,7 +6,6 @@ import {
   UndefinedInitialDataInfiniteOptions,
   useInfiniteQuery,
   UseInfiniteQueryResult,
-  useQuery,
 } from '@tanstack/react-query';
 import { get } from './fetchCrud';
 import { TQueryParams } from './types';
@@ -18,20 +17,6 @@ export type PredefinedGetListQueryProps<T> = {
   queryOptions?: Omit<QueryObserverOptions<T, NetworkError>, 'queryKey'>;
 };
 
-export function usePredefinedListQuery<T>({
-  path,
-  queryParams,
-  queryOptions,
-}: PredefinedGetListQueryProps<T>) {
-  return useQuery<T, NetworkError>({
-    queryFn: () => {
-      const getRet = get<T>(path, queryParams);
-      return getRet;
-    },
-    ...queryOptions,
-    queryKey: [...path.split('/'), queryParams],
-  });
-}
 interface PredefinedInfiniteQueryProps<
   TQueryFnData extends { next_url?: string },
   TData,
