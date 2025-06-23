@@ -2,6 +2,9 @@
 Presenting financial sheets based on external API data provided by free **polygon.io** services.
 For now it presenst only two list of view as simple table data with some filters, columns setting and sorters.
 
+## Live demo
+You can visit https://financialsheets-reno126s-projects.vercel.app
+
 ## Motivation
 The purpose of this project is to test the possibilities, advantages and disadvantages we have with **Next version 15**. I also wanted to find out about compatibility with the latest versions of **React Query** (now called TanStack Query).
 
